@@ -5,7 +5,7 @@ const NAMES = ['Дмитрий','Констанция','Виктор','Ване�
 const NUMBERS_COUNT= [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25' ];
 
 // Прописываем поле аватары
-const AVATAR = [ 'img/avatar-2.svg', 'img/avatar-3.svg', 'img/avatar-4.svg', 'img/avatar-5.svg', 'img/avatar-6.svg' ];
+const AVATARS = [ 'img/avatar-2.svg', 'img/avatar-3.svg', 'img/avatar-4.svg', 'img/avatar-5.svg', 'img/avatar-6.svg' ];
 
 // Названия фотографий
 const ADRESS_PHOTOS = [ 'photos/1.jpg', 'photos/2.jpg', 'photos/3.jpg', 'photos/4.jpg', 'photos/5.jpg', 'photos/6.jpg', 'photos/7.jpg', 'photos/8.jpg', 'photos/9.jpg',
@@ -13,7 +13,7 @@ const ADRESS_PHOTOS = [ 'photos/1.jpg', 'photos/2.jpg', 'photos/3.jpg', 'photos/
   'photos/20.jpg','photos/21.jpg', 'photos/22.jpg', 'photos/23.jpg', 'photos/24.jpg', 'photos/25.jpg' ];
 
 // Описание фото
-const DESCRIPTION_PHOTO = ['1. Пляж', '2. Дорога на пляж', '3. Океан', '4. Девушка Фотограф', '5. Плов с супом',
+const DESCRIPTIONS_PHOTO = ['1. Пляж', '2. Дорога на пляж', '3. Океан', '4. Девушка Фотограф', '5. Плов с супом',
   '6. Ламба', '7. Клубника', '8. Морс', '9. Девушка в бикини', '10. Обувь', '11. Забор', '12. Ауди', '13. Овощной салат', '14. Киса', '15. Отдых', '16. Небо', '17. Ансамбль'
   , '18. Ретро машина', '19. Ночной поход', '20. Отель', '21. Куриное блюдо', '22. Закат на море', '23. Краб', '24. Концерт', '25. Бегемот'];
 
@@ -54,30 +54,26 @@ function getRandomInteger(min, max) {
   }
 }
 
-
 // Функция поиска случайного элемента в массиве
 const getRandomArrayElement = (elements) => elements[_.random(0, elements.length - 1)];
 
+const getComments = () => ({
+  id: getRandomArrayElement(NUMBERS_COUNT),
+  avatar: getRandomArrayElement(AVATARS),
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
+});
+
+
 // Индекс вызова переменных
-const createGeneration = () => {
-  const getComments = () => ({
-    id: getRandomArrayElement(NUMBERS_COUNT),
-    avatar: getRandomArrayElement(AVATAR),
-    message: MESSAGES[_.random(0, MESSAGES.length - 1)],
-    name: NAMES[_.random(0, NAMES.length - 1)],
-  });
+const createGeneration = () => ({
 
-
-  // eslint-disable-next-line no-unused-vars
-  return {
-
-    id: getRandomArrayElement(NUMBERS_COUNT),
-    url: getRandomArrayElement(ADRESS_PHOTOS),
-    description: getRandomArrayElement(DESCRIPTION_PHOTO),
-    likes: getRandomInteger(15, 200),
-    comments: getComments(),
-  };
-};
+  id: getRandomArrayElement(NUMBERS_COUNT),
+  url: getRandomArrayElement(ADRESS_PHOTOS),
+  description: getRandomArrayElement(DESCRIPTIONS_PHOTO),
+  likes: getRandomInteger(15, 200),
+  comments: getComments(),
+});
 
 // eslint-disable-next-line no-unused-vars
 const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createGeneration);
