@@ -28,6 +28,7 @@ const MESSAGES = [
 
 const SIMILAR_DESCRIPTION_COUNT = 8;
 
+// module2-task1
 // eslint-disable-next-line no-unused-vars
 const getRandomInt = (min, max) => {
   if (min < 0) {
@@ -42,13 +43,8 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-
-// eslint-disable-next-line no-unused-vars
-const checkMaxStringLength = (value, maxLength) => value.length > maxLength;
-
-
 // Рандомное число
-const getRandomInteger = (min, max) => {
+function getRandomInteger(min, max) {
   if (min <= 0 && max < min) {
     throw new SyntaxError('Неверный интервал, минимальное значение должно быть больше или равно 0 и меньше максимального значения');
   }
@@ -56,7 +52,7 @@ const getRandomInteger = (min, max) => {
     const rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
-};
+}
 
 
 // Функция поиска случайного элемента в массиве
@@ -90,11 +86,7 @@ const descriptions = createDescriptions();
 // eslint-disable-next-line no-console
 console.log(descriptions);
 
-
-getRandomInt(2, 5);
-
-
-// eslint-disable-next-line no-unused-vars
+// Максимальная длина строки
 const checkMaxStringLength = (value, maxLength) => value.length > maxLength;
 
 checkMaxStringLength('Каждый охотник желает знать где сидит фазан', 140);
