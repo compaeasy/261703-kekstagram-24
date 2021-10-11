@@ -28,7 +28,6 @@ const MESSAGES = [
 
 const SIMILAR_DESCRIPTION_COUNT = 8;
 
-// module2-task1
 // eslint-disable-next-line no-unused-vars
 const getRandomInt = (min, max) => {
   if (min < 0) {
@@ -90,4 +89,13 @@ const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT},
 const descriptions = createDescriptions();
 // eslint-disable-next-line no-console
 console.log(descriptions);
+
+=======
+getRandomInt(2, 5);
+
+
+// eslint-disable-next-line no-unused-vars
+const checkMaxStringLength = (value, maxLength) => value.length > maxLength;
+
+checkMaxStringLength('Каждый охотник желает знать где сидит фазан', 140);
 
