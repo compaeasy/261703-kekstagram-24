@@ -1,1 +1,4 @@
-import './data.js';
+import { descriptions } from './data.js';
+
+// eslint-disable-next-line no-console
+console.log(descriptions);

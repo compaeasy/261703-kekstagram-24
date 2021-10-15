@@ -59,7 +59,7 @@ const getComments = () => ({
 
 
 // Индекс вызова переменных
-const createGeneration = () => ({
+const createDescription = () => ({
 
   id: getRandomArrayElement(NUMBERS_COUNT),
   url: getRandomArrayElement(ADRESS_PHOTOS),
@@ -69,10 +69,10 @@ const createGeneration = () => ({
 });
 
 // eslint-disable-next-line no-unused-vars
-const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createGeneration);
+const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createDescription);
 
 const descriptions = createDescriptions();
-// eslint-disable-next-line no-console
-console.log(descriptions);
+
+export { descriptions };
 
 
