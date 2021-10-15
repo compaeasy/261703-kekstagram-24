@@ -1,8 +1,4 @@
-import {getRandomInt, checkMaxStringLength} from './util.js';
-
-getRandomInt(1, 2);
-checkMaxStringLength(140);
-
+import { getRandomInt } from './util.js';
 
 // Прописываем имена
 const NAMES = ['Дмитрий','Констанция','Виктор','Ванесса','Георгий','Ариана','Николай','Джордж'];
@@ -23,7 +19,7 @@ const DESCRIPTIONS_PHOTO = ['1. Пляж', '2. Дорога на пляж', '3. 
   '6. Ламба', '7. Клубника', '8. Морс', '9. Девушка в бикини', '10. Обувь', '11. Забор', '12. Ауди', '13. Овощной салат', '14. Киса', '15. Отдых', '16. Небо', '17. Ансамбль'
   , '18. Ретро машина', '19. Ночной поход', '20. Отель', '21. Куриное блюдо', '22. Закат на море', '23. Краб', '24. Концерт', '25. Бегемот'];
 
-// eslint-disable-next-line no-unused-vars
+// Описание ответов
 const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -33,22 +29,10 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-// eslint-disable-next-line no-unused-vars
 const SIMILAR_DESCRIPTION_COUNT = 8;
 
-// Рандомное число
-function getRandomInteger(min, max) {
-  if (min <= 0 && max < min) {
-    throw new SyntaxError('Неверный интервал, минимальное значение должно быть больше или равно 0 и меньше максимального значения');
-  }
-  else {
-    const rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  }
-}
-
 // Функция поиска случайного элемента в массиве
-const getRandomArrayElement = (elements) => elements[_.random(0, elements.length - 1)];
+const getRandomArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
 
 const getComments = () => ({
   id: getRandomArrayElement(NUMBERS_COUNT),
@@ -57,22 +41,18 @@ const getComments = () => ({
   name: getRandomArrayElement(NAMES),
 });
 
-
-// Индекс вызова переменных
 const createDescription = () => ({
 
   id: getRandomArrayElement(NUMBERS_COUNT),
   url: getRandomArrayElement(ADRESS_PHOTOS),
   description: getRandomArrayElement(DESCRIPTIONS_PHOTO),
-  likes: getRandomInteger(15, 200),
+  likes: getRandomInt(15, 200),
   comments: getComments(),
 });
 
-// eslint-disable-next-line no-unused-vars
+// Описание
 const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createDescription);
 
-const descriptions = createDescriptions();
-
-export { descriptions };
+export { createDescriptions };
 
 

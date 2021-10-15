@@ -1,4 +1,3 @@
-// module2-task1
 const getRandomInt = (min, max) => {
   if (min < 0) {
     throw new Error('Min не должен быть меньше 0');
@@ -16,3 +15,4 @@ const getRandomInt = (min, max) => {
 const checkMaxStringLength = (value, maxLength) => value.length > maxLength;
 
 export {getRandomInt, checkMaxStringLength};
+
