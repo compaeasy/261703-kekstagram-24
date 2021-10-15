@@ -1,4 +1,4 @@
-import { getRandomInt } from './util.js';
+import { getRandomInt, getRandomArrayElement } from './util.js';
 
 // Прописываем имена
 const NAMES = ['Дмитрий','Констанция','Виктор','Ванесса','Георгий','Ариана','Николай','Джордж'];
@@ -30,9 +30,6 @@ const MESSAGES = [
 ];
 
 const SIMILAR_DESCRIPTION_COUNT = 8;
-
-// Функция поиска случайного элемента в массиве
-const getRandomArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
 
 const getComments = () => ({
   id: getRandomArrayElement(NUMBERS_COUNT),

@@ -14,5 +14,8 @@ const getRandomInt = (min, max) => {
 // Максимальная длина строки
 const checkMaxStringLength = (value, maxLength) => value.length > maxLength;
 
-export {getRandomInt, checkMaxStringLength};
+// Функция поиска случайного элемента в массиве
+const getRandomArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
+
+export {getRandomInt, checkMaxStringLength, getRandomArrayElement};
 
