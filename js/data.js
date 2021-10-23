@@ -1,5 +1,7 @@
 import { getRandomInt, getRandomArrayElement } from './util.js';
 
+const SIMILAR_DESCRIPTION_COUNT = 25;
+
 // Прописываем имена
 const NAMES = ['Дмитрий','Констанция','Виктор','Ванесса','Георгий','Ариана','Николай','Джордж'];
 
@@ -29,8 +31,6 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const SIMILAR_DESCRIPTION_COUNT = 8;
-
 const getComments = () => ({
   id: getRandomArrayElement(NUMBERS_COUNT),
   avatar: getRandomArrayElement(AVATARS),
@@ -38,7 +38,7 @@ const getComments = () => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const createDescription = () => ({
+const createPicture = () => ({
 
   id: getRandomArrayElement(NUMBERS_COUNT),
   url: getRandomArrayElement(ADRESS_PHOTOS),
@@ -48,8 +48,8 @@ const createDescription = () => ({
 });
 
 // Описание
-const createDescriptions = () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createDescription);
+const createPictures= () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createPicture);
 
-export { createDescriptions };
+export { createPictures };
 
 
