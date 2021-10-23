@@ -1,5 +1,6 @@
-import { createDescriptions } from './data.js';
+import { createPictures } from './data.js';
+import { renderPictures } from './picture.js';
 
-const descriptions = createDescriptions();
-// eslint-disable-next-line no-console
-console.log(descriptions);
+const pictures = createPictures();
+
+renderPictures(pictures);
