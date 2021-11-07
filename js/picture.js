@@ -3,11 +3,16 @@ const renderPictures = (pictures) => {
   const template = document.querySelector('#picture').content;
   const picturesFragment = document.createDocumentFragment();
 
-  pictures.forEach(({ url, likes, comments }) => {
+  pictures.forEach((picture) => {
     const picturesElement = template.cloneNode(true);
-    picturesElement.querySelector('.picture__img').src = url;
-    picturesElement.querySelector('.picture__comments').textContent = likes;
-    picturesElement.querySelector('.picture__likes').textContent = comments.length;
+    const pictureImgElement = picturesElement.querySelector('.picture__img');
+    const pictureCommentsElement = picturesElement.querySelector('.picture__comments');
+    const pictureLikesElement = picturesElement.querySelector('.picture__likes');
+    pictureImgElement.src = picture.url;
+    pictureImgElement.alt = picture.description;
+    pictureImgElement.dataset.id = picture.id;
+    pictureCommentsElement.textContent = picture.comments.length;
+    pictureLikesElement.textContent = picture.likes;
     picturesFragment.appendChild(picturesElement);
   });
   picturesContainer.appendChild(picturesFragment);

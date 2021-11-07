@@ -1,20 +1,18 @@
 import { getRandomInt, getRandomArrayElement } from './util.js';
 
 const SIMILAR_DESCRIPTION_COUNT = 25;
+const MAX_COMMENTS_COUNT = 8;
 
 // Прописываем имена
-const NAMES = ['Дмитрий','Констанция','Виктор','Ванесса','Георгий','Ариана','Николай','Джордж'];
-
-// Прописываем идентификаторы описания
-const NUMBERS_COUNT= [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25' ];
+const NAMES = ['Дмитрий', 'Констанция', 'Виктор', 'Ванесса', 'Георгий', 'Ариана', 'Николай', 'Джордж'];
 
 // Прописываем поле аватары
-const AVATARS = [ 'img/avatar-2.svg', 'img/avatar-3.svg', 'img/avatar-4.svg', 'img/avatar-5.svg', 'img/avatar-6.svg' ];
+const AVATARS = ['img/avatar-2.svg', 'img/avatar-3.svg', 'img/avatar-4.svg', 'img/avatar-5.svg', 'img/avatar-6.svg'];
 
 // Названия фотографий
-const ADRESS_PHOTOS = [ 'photos/1.jpg', 'photos/2.jpg', 'photos/3.jpg', 'photos/4.jpg', 'photos/5.jpg', 'photos/6.jpg', 'photos/7.jpg', 'photos/8.jpg', 'photos/9.jpg',
+const ADRESS_PHOTOS = ['photos/1.jpg', 'photos/2.jpg', 'photos/3.jpg', 'photos/4.jpg', 'photos/5.jpg', 'photos/6.jpg', 'photos/7.jpg', 'photos/8.jpg', 'photos/9.jpg',
   'photos/10.jpg', 'photos/11.jpg', 'photos/12.jpg', 'photos/13.jpg', 'photos/14.jpg', 'photos/15.jpg', 'photos/16.jpg', 'photos/17.jpg', 'photos/18.jpg', 'photos/19.jpg',
-  'photos/20.jpg','photos/21.jpg', 'photos/22.jpg', 'photos/23.jpg', 'photos/24.jpg', 'photos/25.jpg' ];
+  'photos/20.jpg', 'photos/21.jpg', 'photos/22.jpg', 'photos/23.jpg', 'photos/24.jpg', 'photos/25.jpg'];
 
 // Описание фото
 const DESCRIPTIONS_PHOTO = ['1. Пляж', '2. Дорога на пляж', '3. Океан', '4. Девушка Фотограф', '5. Плов с супом',
@@ -31,24 +29,38 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const getComments = () => ({
-  id: getRandomArrayElement(NUMBERS_COUNT),
-  avatar: getRandomArrayElement(AVATARS),
-  message: getRandomArrayElement(MESSAGES),
-  name: getRandomArrayElement(NAMES),
-});
+const getComments = (pictureId) => {
+  const comments = [];
+  const commentsCount = getRandomInt(0, MAX_COMMENTS_COUNT);
+  for (let index = 1; index <= commentsCount; index++) {
+    comments.push(
+      {
+        id: parseInt(`${pictureId}${index}`, 10),
+        avatar: getRandomArrayElement(AVATARS),
+        message: getRandomArrayElement(MESSAGES),
+        name: getRandomArrayElement(NAMES),
+      },
+    );
+  }
+  return comments;
+};
 
-const createPicture = () => ({
-
-  id: getRandomArrayElement(NUMBERS_COUNT),
+const createPicture = (id) => ({
+  id,
   url: getRandomArrayElement(ADRESS_PHOTOS),
   description: getRandomArrayElement(DESCRIPTIONS_PHOTO),
   likes: getRandomInt(15, 200),
-  comments: getComments(),
+  comments: getComments(id),
 });
 
 // Описание
-const createPictures= () => Array.from({length: SIMILAR_DESCRIPTION_COUNT}, createPicture);
+const createPictures = () => {
+  const pictures = [];
+  for (let index = 1; index <= SIMILAR_DESCRIPTION_COUNT; index++) {
+    pictures.push(createPicture(index));
+  }
+  return pictures;
+};
 
 export { createPictures };
 
