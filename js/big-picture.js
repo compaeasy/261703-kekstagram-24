@@ -74,5 +74,4 @@ const addOpenHandler = (pictures) => {
 
 };
 
-
 export { addOpenHandler };
