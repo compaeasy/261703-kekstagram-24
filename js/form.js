@@ -1,8 +1,13 @@
 import { checkMaxStringLength } from './util.js';
+import { isEscKey } from './helper.js';
+import { initSlider, handleRemoveSlider } from './slider.js';
+import { sendData } from './api.js';
+
 
 const MAX_LENGTH = 140;
 const MAX_HASHTAGS = 5;
 const MAX_LENGTH_HASHTAGS = 20;
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const HASHTAGS_RE = /[~`!@_()$%^&*+=\-[\]\\';,./{}|\\":<>?]/g;
 
 const form = document.querySelector('.img-upload__form');
@@ -16,12 +21,11 @@ const buttonScaleSmallerElement = form.querySelector('.scale__control--smaller')
 const buttonScaleBiggerElement = form.querySelector('.scale__control--bigger');
 const scaleValueElement = form.querySelector('.scale__control--value');
 const uploadPhotoPreviewElement = form.querySelector('.img-upload__preview');
-const effectLevelSliderElement = form.querySelector('.effect-level__slider');
-const effectLevelValueElement = form.querySelector('.effect-level__value');
+const uploadPhotoPreviewImgElement = uploadPhotoPreviewElement.querySelector('img');
 
 const checkDuplicates = (array) => (new Set(array)).size !== array.length;
 const validateComment = () => {
-  if (checkMaxStringLength(MAX_LENGTH, descriptionElement.value)) {
+  if (checkMaxStringLength(descriptionElement.value, MAX_LENGTH)) {
     descriptionElement.setCustomValidity('');
     descriptionElement.classList.remove('text__description--error');
   } else {
@@ -105,104 +109,154 @@ const changeScale = (high) => {
 const initEffects = () => {
   buttonScaleSmallerElement.addEventListener('click', () => changeScale(false));
   buttonScaleBiggerElement.addEventListener('click', () => changeScale(true));
-  noUiSlider.create(effectLevelSliderElement, {
-    range: {
-      min: 0,
-      max: 100,
-    },
-    start: 80,
-    step: 1,
-    connect: 'lower',
-    format: {
-      to: function (value) {
-        if (Number.isInteger(value)) {
-          return value.toFixed(0);
-        }
-        return value.toFixed(1);
-      },
-      from: function (value) {
-        return parseFloat(value);
-      },
-    },
-  });
-
-  effectLevelSliderElement.noUiSlider.on('update', (values, handle) => {
-    effectLevelValueElement.value = values[handle];
-  });
 };
 
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-  }
-});
 
-const openUploadPopup = () => {
-  imgUploadOverlayElement.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-};
+let closeHandler = undefined;
+let openPopupHandler = undefined;
 
 const closeUploadPopup = () => {
   imgUploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', closeHandler);
+  imgUploadInputElement.removeEventListener('change', openPopupHandler);
+  imgUploadInputElement.addEventListener('change', openPopupHandler);
+  form.reset();
+  handleRemoveSlider();
+  uploadPhotoPreviewElement.style.transform = 'scale(1)';
+  scaleValueElement.value = 100;
+
 };
-const initForm = () => {
-  imgUploadInputElement.addEventListener('change', () => {
-    openUploadPopup();
+
+closeHandler = (evt) => {
+  if (isEscKey(evt)&&evt.target.tagName!=='TEXTAREA') {
+
+    evt.preventDefault();
+    closeUploadPopup();
+
+  }
+};
+
+const openPopup = () => {
+  imgUploadOverlayElement.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', closeHandler);
+  initSlider();
+  imgUploadCancelButtonElement.addEventListener('click', () => {
+    closeUploadPopup();
   });
+
+  const file = imgUploadInputElement.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((item) => fileName.endsWith(item));
+
+  if (matches) {
+    uploadPhotoPreviewImgElement.src = URL.createObjectURL(file);
+  }
+
+};
+openPopupHandler = () => {
+  openPopup();
+};
+
+// Функция убирает сообщение об успешной загрузке изображения
+const closeSuccessPopup = () => {
+  const successPopup = document.querySelector('.success');
+  successPopup.remove();
+  document.removeEventListener('keydown', onSuccessPopupEscKeydown);
+  document.removeEventListener('click', onOuterSuccessPopupClick);
+};
+
+function onSuccessPopupButtonClick () {
+  closeSuccessPopup();
+}
+
+function onSuccessPopupEscKeydown (evt) {
+  if (isEscKey(evt)) {
+    closeSuccessPopup();
+  }
+}
+
+function onOuterSuccessPopupClick (evt) {
+  if (!evt.target.closest('.success__inner')) {
+    closeSuccessPopup();
+  }
+}
+
+// Функция показывает сообщение об успешной загрузке изображения
+const showSuccessPopup = () => {
+  const successTemplate = document.querySelector('#success').content;
+  const successPattern = successTemplate.querySelector('.success');
+  const successPopup = successPattern.cloneNode(true);
+
+  successPopup.querySelector('.success__button').addEventListener('click', onSuccessPopupButtonClick);
+
+  document.addEventListener('click', onOuterSuccessPopupClick);
+
+  document.addEventListener('keydown', onSuccessPopupEscKeydown);
+
+  document.body.appendChild(successPopup);
+};
+
+// Функция убирает сообщение об ошибке при загрузке изображения
+const closeFailPopup = () => {
+  document.querySelector('.error').remove();
+  document.removeEventListener('keydown', onFailPopupEscKeydown);
+  document.removeEventListener('click', onOuterFailPopupClick);
+};
+
+function onFailPopupButtonClick () {
+  closeFailPopup();
+}
+
+function onFailPopupEscKeydown (evt) {
+  if (isEscKey(evt)) {
+    closeFailPopup();
+  }
+}
+
+function onOuterFailPopupClick (evt) {
+  if (!evt.target.closest('.error__inner')) {
+    closeFailPopup();
+  }
+}
+
+// Функция показывает сообщение об ошибке при загрузке изображения
+const showFailPopup = () => {
+  const failTemplate = document.querySelector('#error').content;
+  const failPattern = failTemplate.querySelector('.error');
+  const failPopup = failPattern.cloneNode(true);
+
+  failPopup.querySelector('.error__button').addEventListener('click', onFailPopupButtonClick);
+
+  document.addEventListener('click', onOuterFailPopupClick);
+
+  document.addEventListener('keydown', onFailPopupEscKeydown);
+
+  document.body.appendChild(failPopup);
+};
+// Функция отправки формы
+const setUserFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      new FormData(evt.target),
+      showSuccessPopup,
+      showFailPopup,
+    );
+    closeUploadPopup();
+  });
+};
+
+const initForm = () => {
+  imgUploadInputElement.addEventListener('change', openPopupHandler);
   imgUploadCancelButtonElement.addEventListener('click', () => {
     closeUploadPopup();
   });
   initValidation();
   initEffects();
+  setUserFormSubmit();
 };
-
-//Module 10 task-1
-
-// const SCALE_VALUE_STEP = 25;
-
-// const rescaleUploadPhoto = (value, el) => {
-//   el.style.cssText = `transform: scale(${value / 100})`;
-// };
-
-// buttonScaleSmallerElement.addEventListener('click', () => {
-//   if (!(scaleValueElement.value <= 25)) {
-//     scaleValueElement.value = scaleValueElement.value - SCALE_VALUE_STEP;
-//   }
-
-//   rescaleUploadPhoto(scaleValueElement.value, uploadPhotoPreview);
-// });
-
-// buttonScaleBiggerElement.addEventListener('click', () => {
-//   if (!(scaleValueElement.value >= 100)) {
-//     scaleValueElement.value = Number(scaleValueElement.value) + SCALE_VALUE_STEP;
-//   }
-
-//   rescaleUploadPhoto(Number(scaleValueElement.value), uploadPhotoPreview);
-// });
-
-// const createSlider = () => {
-//   noUiSlider.create(effectsSliderContainer, {
-//     range: {
-//       min: 0,
-//       max: 100,
-//     },
-//     start: 100,
-//     step: 1,
-//   });
-
-//   addHiddenClass(effectLevel);
-// };
-
-// const changeSliderOptions = (minValue, maxValue, stepValue, startValue) => {
-//   effectsSliderContainer.noUiSlider.updateOptions({
-//     range: {
-//       min: minValue,
-//       max: maxValue,
-//     },
-//     start: startValue,
-//     step: stepValue,
-//   });
-// };
 
 export { initForm, uploadPhotoPreviewElement };

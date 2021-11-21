@@ -1,10 +1,19 @@
-import { createPictures } from './data.js';
 import { renderPictures } from './picture.js';
 import { addOpenHandler } from './big-picture.js';
 import { initForm } from './form.js';
+import { getData } from './api.js';
+import { showError } from './notification.js';
+import { showFilters, sortMinPictures } from './sort-pictures.js';
 
-const pictures = createPictures();
+getData((pictures) => {
+  renderPictures(pictures);
+  addOpenHandler(pictures);
+  initForm();
+  showFilters();
+  sortMinPictures(pictures);
+}, (error) => {
+  showError(error);
+},
+);
 
-renderPictures(pictures);
-addOpenHandler(pictures);
-initForm();
+
