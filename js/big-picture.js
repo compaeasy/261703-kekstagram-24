@@ -7,7 +7,7 @@ const bigPicture = document.querySelector('.big-picture');
 const commentsContainer = bigPicture.querySelector('.social__comments');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 let closeHandler = undefined;
-const closeModal = () => {
+const closeModalHandler = () => {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', closeHandler);
@@ -16,7 +16,7 @@ const closeModal = () => {
 closeHandler = (evt) => {
   if(isEscKey(evt)) {
     evt.preventDefault();
-    closeModal();
+    closeModalHandler();
   }
 };
 
@@ -100,7 +100,7 @@ const addOpenHandler = (pictures) => {
       }
     }
   });
-  closeButton.addEventListener('click', closeModal);
+  closeButton.addEventListener('click', closeModalHandler);
 
 };
 

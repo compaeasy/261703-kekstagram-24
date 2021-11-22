@@ -163,21 +163,21 @@ openPopupHandler = () => {
 const closeSuccessPopup = () => {
   const successPopup = document.querySelector('.success');
   successPopup.remove();
-  document.removeEventListener('keydown', onSuccessPopupEscKeydown);
-  document.removeEventListener('click', onOuterSuccessPopupClick);
+  document.removeEventListener('keydown', successPopupEscKeydownHandler);
+  document.removeEventListener('click', outerSuccessPopupClickHandler);
 };
 
 function onSuccessPopupButtonClick () {
   closeSuccessPopup();
 }
 
-function onSuccessPopupEscKeydown (evt) {
+function successPopupEscKeydownHandler (evt) {
   if (isEscKey(evt)) {
     closeSuccessPopup();
   }
 }
 
-function onOuterSuccessPopupClick (evt) {
+function outerSuccessPopupClickHandler (evt) {
   if (!evt.target.closest('.success__inner')) {
     closeSuccessPopup();
   }
@@ -191,9 +191,9 @@ const showSuccessPopup = () => {
 
   successPopup.querySelector('.success__button').addEventListener('click', onSuccessPopupButtonClick);
 
-  document.addEventListener('click', onOuterSuccessPopupClick);
+  document.addEventListener('click', outerSuccessPopupClickHandler);
 
-  document.addEventListener('keydown', onSuccessPopupEscKeydown);
+  document.addEventListener('keydown', successPopupEscKeydownHandler);
 
   document.body.appendChild(successPopup);
 };
